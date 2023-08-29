@@ -2,6 +2,7 @@ package main
 
 import (
 	"archive/zip"
+	"fmt"
 	"io"
 	"log"
 	"os"
@@ -9,13 +10,20 @@ import (
 )
 
 func main() {
-	r, err := zip.OpenReader("old.apks")
+	if len(os.Args) != 3 {
+		fmt.Println("usage: apkstripper <oldfile> <newfile>")
+		os.Exit(1)
+	}
+	oldFileName := os.Args[1]
+	newFileName := os.Args[2]
+
+	r, err := zip.OpenReader(oldFileName)
 	if err != nil {
 		log.Fatal(err)
 	}
 	defer r.Close()
 
-	newFile, err := os.Create("stripped.apks")
+	newFile, err := os.Create(newFileName)
 	if err != nil {
 		log.Fatal(err)
 	}
